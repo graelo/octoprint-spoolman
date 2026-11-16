@@ -101,6 +101,7 @@ class SpoolmanPlugin(
                 "js/api/getCurrentJobRequirements.js",
                 "js/api/updateActiveSpool.js",
                 "js/Spoolman_api.js",
+                "js/common/filamentTool.js",
                 "js/Spoolman_sidebar.js",
                 "js/Spoolman_settings.js",
                 "js/Spoolman_modal_selectSpool.js",

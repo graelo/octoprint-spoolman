@@ -297,8 +297,10 @@ $(() => {
                 const modelFilaments = self.printerStateViewModel.filament();
                 const spools = self.templateData.selectedSpoolsByToolIdx();
 
-                return modelFilaments.map((modelFilament, idx) => {
-                    const spoolData = spools[idx]?.spoolData;
+                return modelFilaments.map((modelFilament) => {
+                    // OctoPrint filters unused tools from filament(), so its array
+                    // index is not necessarily the original tool index.
+                    const spoolData = getSpoolDataForFilament(modelFilament, spools);
                     const spoolFilamentData = spoolData?.filament;
                     const requiredFilamentLength = modelFilament.data().length;
                     const modelWeight = (
