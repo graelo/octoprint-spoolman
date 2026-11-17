@@ -17,6 +17,19 @@ const getSpoolDataForFilament = (modelFilament, spools) => {
     return toolIdx === undefined ? undefined : spools[toolIdx]?.spoolData;
 };
 
+// Negative lengths can arise from metadata and format as a misleading -0.0 g.
+// Leave nonnumeric lengths unknown instead of treating them as unused.
+const isFilamentUsageUnused = (toolFilamentUsage) => (
+    !toolFilamentUsage || (
+        Number.isFinite(toolFilamentUsage.filamentLength) &&
+        toolFilamentUsage.filamentLength <= 0
+    )
+);
+
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { getFilamentToolIndex, getSpoolDataForFilament };
+    module.exports = {
+        getFilamentToolIndex,
+        getSpoolDataForFilament,
+        isFilamentUsageUnused,
+    };
 }

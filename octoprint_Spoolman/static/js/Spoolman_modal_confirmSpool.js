@@ -115,10 +115,7 @@ $(() => {
                 const spoolDisplayData = spoolData && toSpoolForDisplay(spoolData, { constants: self.constants });
                 const toolFilamentUsage = currentJobRequirements.tools[extruderIdx];
 
-                if (
-                    !toolFilamentUsage ||
-                    toolFilamentUsage.filamentLength === 0
-                ) {
+                if (isFilamentUsageUnused(toolFilamentUsage)) {
                     return {
                         spoolId,
                         spoolData,

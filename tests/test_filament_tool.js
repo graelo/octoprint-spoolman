@@ -3,6 +3,7 @@ const test = require('node:test');
 const {
     getFilamentToolIndex,
     getSpoolDataForFilament,
+    isFilamentUsageUnused,
 } = require('../octoprint_Spoolman/static/js/common/filamentTool.js');
 
 const spool = (remaining_weight, diameter, density) => ({
@@ -94,4 +95,23 @@ test('returns no spool metadata when the selected tool has no spool', () => {
         getSpoolDataForFilament({ name: () => 'Tool 1' }, [{ spoolData: spool(20, 1.75, 1.24) }]),
         undefined,
     );
+});
+
+test('treats zero and negative filament usage as unused', () => {
+    const tinyNegativeLength = -0.0001;
+    const tinyNegativeWeight = calculateWeight(
+        tinyNegativeLength,
+        { diameter: 1.75, density: 1.24 },
+    );
+
+    assert.equal(tinyNegativeWeight.toFixed(1), '-0.0');
+    assert.equal(isFilamentUsageUnused({ filamentLength: 0 }), true);
+    assert.equal(isFilamentUsageUnused({ filamentLength: tinyNegativeLength }), true);
+    assert.equal(isFilamentUsageUnused(undefined), true);
+});
+
+test('keeps positive and unknown filament usage distinct from unused', () => {
+    assert.equal(isFilamentUsageUnused({ filamentLength: 0.0001 }), false);
+    assert.equal(isFilamentUsageUnused({ filamentLength: undefined }), false);
+    assert.equal(isFilamentUsageUnused({ filamentLength: Number.NaN }), false);
 });
